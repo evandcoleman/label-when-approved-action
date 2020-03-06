@@ -49,31 +49,31 @@ label_when_approved() {
     if [[ "$rState" == "APPROVED" ]]; then
       approvals=$((approvals+1))
     fi
-
-    echo "${approvals}/${APPROVALS} approvals"
-
-    if [[ "$approvals" == "$APPROVALS" ]]; then
-      echo "Labeling pull request"
-
-      curl -sSL \
-        -H "${AUTH_HEADER}" \
-        -H "${API_HEADER}" \
-        -X POST \
-        -H "Content-Type: application/json" \
-        -d "{\"labels\":[\"${addLabel}\"]}" \
-        "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels"
-
-      if [[ -n "$REMOVE_LABEL" ]]; then
-          curl -sSL \
-            -H "${AUTH_HEADER}" \
-            -H "${API_HEADER}" \
-            -X DELETE \
-            "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${REMOVE_LABEL}"
-      fi
-
-      break
-    fi
   done
+
+  echo "${approvals}/${APPROVALS} approvals"
+
+  if [[ "$approvals" == "$APPROVALS" ]]; then
+    echo "Labeling pull request"
+
+    curl -sSL \
+      -H "${AUTH_HEADER}" \
+      -H "${API_HEADER}" \
+      -X POST \
+      -H "Content-Type: application/json" \
+      -d "{\"labels\":[\"${addLabel}\"]}" \
+      "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels"
+
+    if [[ -n "$REMOVE_LABEL" ]]; then
+        curl -sSL \
+          -H "${AUTH_HEADER}" \
+          -H "${API_HEADER}" \
+          -X DELETE \
+          "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${REMOVE_LABEL}"
+    fi
+
+    break
+  fi
 }
 
 if [[ "$action" == "submitted" ]] && [[ "$state" == "approved" ]]; then
