@@ -65,11 +65,12 @@ label_when_approved() {
       "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels"
 
     if [[ -n "$REMOVE_LABEL" ]]; then
+      ESCAPED_LABEL=${REMOVE_LABEL// /%20}
       curl -sSL \
         -H "${AUTH_HEADER}" \
         -H "${API_HEADER}" \
         -X DELETE \
-        "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${REMOVE_LABEL}"
+        "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels/${ESCAPED_LABEL}"
     fi
   fi
 }
